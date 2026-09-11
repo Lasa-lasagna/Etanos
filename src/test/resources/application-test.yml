@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:test;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: false
+  flyway:
+    enabled: false
+
+jwt:
+  secret: "gloria-inventory-secret-key-change-in-production-1234567890-test-only-32-chars"
+  expiration-ms: 1800000
+  cookie:
+    name: JWT
+    secure: false
+    same-site: Lax
+    path: /
+    http-only: true

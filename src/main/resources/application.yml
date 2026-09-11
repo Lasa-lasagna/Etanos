@@ -1,0 +1,29 @@
+server:
+  port: 8080
+  address: 0.0.0.0
+  
+spring:
+  application:
+    name: gloria
+  flyway:
+    enabled: true
+  datasource: 
+    url: jdbc:postgresql://${DB_URL}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    # driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+
+jwt:
+  secret: "gloria-inventory-secret-key-change-in-production-1234567890"
+  expiration-ms: 1800000 # 30 min accesstoken
+  cookie:
+    name: JWT
+    secure: false # true en producción con HTTPS
+    same-site: Lax
+    path: /
+    http-only: true

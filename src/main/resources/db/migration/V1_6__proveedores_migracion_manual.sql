@@ -1,0 +1,11 @@
+-- ===========================
+-- V1.6 - MIGRACIÓN MANUAL PROVEEDORES (Placeholder)
+-- ===========================
+-- Ejecutar manualmente tras poblar la tabla proveedores:
+-- 1. INSERT INTO proveedores (tipo_doc, nro_doc, razon_social, nombre_comercial, telefono, direccion, condicion_pago, estado)
+--    SELECT DISTINCT 'RUC', proveedor_id::text, 'Proveedor ' || proveedor_id::text, null, null, null, 0, true
+--    FROM entradas WHERE proveedor_id IS NOT NULL;
+--
+-- 2. UPDATE entradas e SET proveedor_id = p.id
+--    FROM proveedores p
+--    WHERE p.nro_doc = e.proveedor_id::text;

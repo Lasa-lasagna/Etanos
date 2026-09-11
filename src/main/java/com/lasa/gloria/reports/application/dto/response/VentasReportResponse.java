@@ -1,0 +1,9 @@
+package com.lasa.gloria.reports.application.dto.response;
+
+import java.math.BigDecimal;
+import java.util.Map;
+
+public record VentasReportResponse(
+        Map<String, BigDecimal> porTipoVenta,
+        Map<String, BigDecimal> porMetodoPago
+) {}
