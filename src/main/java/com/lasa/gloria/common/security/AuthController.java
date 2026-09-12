@@ -55,25 +55,23 @@ public class AuthController {
         Usuario usuario = usuarioService.crear(request.username(), request.password(), request.nombre());
         String token = jwtService.generateToken(usuario.getUsername(), usuario.getId());
         addJwtCookie(response, token);
-        // React no lee la cookie (HttpOnly), pero devolvemos token para fallback header/API
         return ResponseEntity.ok(new LoginResponse(token));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request, HttpServletResponse response) {
+    public ResponseEntity<Void> login(@RequestBody LoginRequest request, HttpServletResponse response) {
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.username(), request.password()));
         Usuario usuario = usuarioRepository.findByUsername(auth.getName())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
         String token = jwtService.generateToken(usuario.getUsername(), usuario.getId());
         addJwtCookie(response, token);
-        return ResponseEntity.ok(new LoginResponse(token));
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<LoginResponse> refresh(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
+    public ResponseEntity<Void> refresh(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
         String token = null;
-        // 1. cookie
         if (httpRequest.getCookies() != null) {
             for (jakarta.servlet.http.Cookie c : httpRequest.getCookies()) {
                 if (jwtService.getCookieName().equals(c.getName())) {
@@ -82,11 +80,6 @@ public class AuthController {
                 }
             }
         }
-        // 2. header fallback
-        if (token == null) {
-            String header = httpRequest.getHeader("Authorization");
-            if (header != null && header.startsWith("Bearer ")) token = header.substring(7);
-        }
         if (token == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         String username = jwtService.extractUsername(token);
         if (!jwtService.isTokenValid(token, username)) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
@@ -94,7 +87,7 @@ public class AuthController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
         String newToken = jwtService.generateToken(usuario.getUsername(), usuario.getId());
         addJwtCookie(httpResponse, newToken);
-        return ResponseEntity.ok(new LoginResponse(newToken));
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/logout")

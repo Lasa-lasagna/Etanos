@@ -18,8 +18,12 @@ spring:
       connection-timeout: 30000
       idle-timeout: 600000
 
+app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:3000}
+
 jwt:
-  secret: "gloria-inventory-secret-key-change-in-production-1234567890"
+  secret: ${JWT_SECRET}
   expiration-ms: 1800000 # 30 min accesstoken
   cookie:
     name: JWT

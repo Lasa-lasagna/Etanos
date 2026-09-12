@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +33,16 @@ public class JwtService {
 
     @Value("${jwt.cookie.path:/}")
     private String cookiePath;
+
+    private static final String EXAMPLE_SECRET = "gloria-inventory-secret-key-change-in-production-1234567890";
+
+    @PostConstruct
+    void validateSecret() {
+        if (secret == null || secret.isBlank() || EXAMPLE_SECRET.equals(secret)) {
+            throw new IllegalStateException(
+                    "JWT_SECRET no configurado: define la variable de entorno JWT_SECRET con un valor propio (>=32 caracteres). La app no arranca con el secreto de ejemplo ni vacío.");
+        }
+    }
 
     public long getExpirationMs() {
         return expirationMs;

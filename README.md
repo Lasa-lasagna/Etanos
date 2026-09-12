@@ -37,6 +37,13 @@ npm run dev
 
 La base de datos es PostgreSQL en `localhost:5432` — Flyway aplica las migraciones automáticamente al arrancar.
 
+### Variables de entorno (`.env`)
+
+| Variable | Obligatoria | Descripción |
+|---|---|---|
+| `DB_NAME`, `DB_PORT`, `DB_URL`, `DB_USER`, `DB_PASSWORD` | Sí | Conexión a PostgreSQL |
+| `JWT_SECRET` | Sí | Secreto para firmar los tokens JWT (mínimo 32 caracteres, valor propio). La app **no arranca** si está vacío o conserva el valor de ejemplo |
+
 ## Reglas de negocio clave
 
 - Venta al contado: requiere caja abierta y registra el ingreso en caja automáticamente.

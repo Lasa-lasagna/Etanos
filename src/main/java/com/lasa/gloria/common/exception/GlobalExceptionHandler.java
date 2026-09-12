@@ -42,8 +42,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ApiError> handleAuthentication(AuthenticationException ex, HttpServletRequest request) {
+        // Genérico a propósito: no distinguir usuario inexistente / clave errónea / cuenta bloqueada.
         ApiError body = ApiError.of(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED.getReasonPhrase(),
-                ex.getMessage(), "AUTHENTICATION_ERROR");
+                "Credenciales inválidas", "BAD_CREDENTIALS");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
     }
 

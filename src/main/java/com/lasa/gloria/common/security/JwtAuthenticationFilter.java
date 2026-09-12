@@ -25,7 +25,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String resolveToken(HttpServletRequest request) {
-        // 1. Cookie HttpOnly (prioridad)
+        // Solo cookie HttpOnly: el token nunca viaja en el body ni en headers
         if (request.getCookies() != null) {
             for (jakarta.servlet.http.Cookie cookie : request.getCookies()) {
                 if (jwtService.getCookieName().equals(cookie.getName())) {
@@ -33,11 +33,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     if (v != null && !v.isBlank()) return v;
                 }
             }
-        }
-        // 2. Header Authorization fallback (para API/móvil)
-        String header = request.getHeader("Authorization");
-        if (header != null && header.startsWith("Bearer ")) {
-            return header.substring(7);
         }
         return null;
     }
